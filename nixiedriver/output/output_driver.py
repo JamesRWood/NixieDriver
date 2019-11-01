@@ -2,7 +2,7 @@ from typing import Type
 
 from nixiedriver.config.config_manager import ConfigManager
 from nixiedriver.output.output import Output
-from nixiedriver.rpi.GPIO import GPIO
+from nixiedriver.rpi.gpio_proxy import GPIOProxy
 
 class OutputDriver:
     def __init__(self, config: Type[ConfigManager]):
@@ -10,7 +10,7 @@ class OutputDriver:
 
         self._gpio_tube_a, self._gpio_tube_b, self._gpio_tube_c, self._gpio_tube_d = map(config.getIntList, ['nixtube', 'nixtube', 'nixtube', 'nixtube'], ['tubea_pin_array', 'tubeb_pin_array', 'tubec_pin_array', 'tubed_pin_array'])
         
-        GPIO.setup(self._gpio_tube_a + self._gpio_tube_b + self._gpio_tube_c + self._gpio_tube_d, GPIO.OUT)
+        GPIOProxy.setup(self._gpio_tube_a + self._gpio_tube_b + self._gpio_tube_c + self._gpio_tube_d, GPIOProxy.OUT)
 
     def update(self, output: Type[Output]):
         tubeA, tubeB, tubeC, tubeD = map(self._getGPIOInput, [output.tubeA, output.tubeB, output.tubeC, output.tubeD])
@@ -26,7 +26,7 @@ class OutputDriver:
                 _GPIOOutputParameter(self._gpio_tube_d, tubeD)
             ]
 
-            [GPIO.output(x.tube, x.value) for x in _param_array]
+            [GPIOProxy.output(x.tube, x.value) for x in _param_array]
 
     def _getGPIOInput(self, intValue: int) -> tuple:
         return tuple([int(s) for s in list(self._intToBCD(intValue))])

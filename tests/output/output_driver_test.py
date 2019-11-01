@@ -4,17 +4,17 @@ from unittest.mock import patch
 from nixiedriver.config.config_manager import ConfigManager
 from nixiedriver.output.output_driver import OutputDriver
 from nixiedriver.output.output import Output
-from nixiedriver.rpi.GPIO import GPIO
+from nixiedriver.rpi.gpio_proxy import GPIOProxy
 
 class Output_OutputDriver_Test(unittest.TestCase):
     def setUp(self):
         self._config = ConfigManager()
         self._unitUnderTest = OutputDriver(self._config)
 
-        self._tubeA = [1,2,3,4]
-        self._tubeB = [5,6,7,8]
-        self._tubeC = [9,10,11,12]
-        self._tubeD = [13,14,15,16]
+        self._tubeA = [2,3,4,17]
+        self._tubeB = [27,22,10,9]
+        self._tubeC = [5,6,13,19]
+        self._tubeD = [14,15,18,23]
 
     def tearDown(self):
         self._config = None
@@ -24,7 +24,7 @@ class Output_OutputDriver_Test(unittest.TestCase):
         self._tubeC = None
         self._tubeD = None
 
-    @patch.object(GPIO, "output")
+    @patch.object(GPIOProxy, "output")
     def test_update_0_0_0_0(self, mock_output):
         # Arrange
         x = Output(0, 0, 0, 0)
@@ -39,7 +39,7 @@ class Output_OutputDriver_Test(unittest.TestCase):
         mock_output.assert_any_call(self._tubeC, (0, 0, 0, 0))
         mock_output.assert_any_call(self._tubeD, (0, 0, 0, 0))
 
-    @patch.object(GPIO, "output")
+    @patch.object(GPIOProxy, "output")
     def test_update_1_0_0_0(self, mock_output):
         # Arrange
         x = Output(1, 0, 0, 0)
@@ -54,7 +54,7 @@ class Output_OutputDriver_Test(unittest.TestCase):
         mock_output.assert_any_call(self._tubeC, (0, 0, 0, 0))
         mock_output.assert_any_call(self._tubeD, (0, 0, 0, 0))
 
-    @patch.object(GPIO, "output")
+    @patch.object(GPIOProxy, "output")
     def test_update_0_2_0_0(self, mock_output):
         # Arrange
         x = Output(0, 2, 0, 0)
@@ -69,7 +69,7 @@ class Output_OutputDriver_Test(unittest.TestCase):
         mock_output.assert_any_call(self._tubeC, (0, 0, 0, 0))
         mock_output.assert_any_call(self._tubeD, (0, 0, 0, 0))
 
-    @patch.object(GPIO, "output")
+    @patch.object(GPIOProxy, "output")
     def test_update_0_0_3_0(self, mock_output):
         # Arrange
         x = Output(0, 0, 3, 0)
@@ -84,7 +84,7 @@ class Output_OutputDriver_Test(unittest.TestCase):
         mock_output.assert_any_call(self._tubeC, (0, 0, 1, 1))
         mock_output.assert_any_call(self._tubeD, (0, 0, 0, 0))
 
-    @patch.object(GPIO, "output")
+    @patch.object(GPIOProxy, "output")
     def test_update_0_0_0_4(self, mock_output):
         # Arrange
         x = Output(0, 0, 0, 4)
@@ -99,7 +99,7 @@ class Output_OutputDriver_Test(unittest.TestCase):
         mock_output.assert_any_call(self._tubeC, (0, 0, 0, 0))
         mock_output.assert_any_call(self._tubeD, (0, 1, 0, 0))
 
-    @patch.object(GPIO, "output")
+    @patch.object(GPIOProxy, "output")
     def test_update_5_6_7_8(self, mock_output):
         # Arrange
         x = Output(5, 6, 7, 8)
@@ -114,7 +114,7 @@ class Output_OutputDriver_Test(unittest.TestCase):
         mock_output.assert_any_call(self._tubeC, (0, 1, 1, 1))
         mock_output.assert_any_call(self._tubeD, (1, 0, 0, 0))
 
-    @patch.object(GPIO, "output")
+    @patch.object(GPIOProxy, "output")
     def test_update_9_9_9_9(self, mock_output):
         # Arrange
         x = Output(9, 9, 9, 9)

@@ -5,7 +5,7 @@ try:
 except:
     _rpiLoaded = False
 
-class GPIO():
+class GPIOProxy():
     BCM = GPIO.BCM if _rpiLoaded else 'BCM'
    
     HIGH = GPIO.HIGH if _rpiLoaded else 'HIGH'
@@ -16,36 +16,43 @@ class GPIO():
 
     FALLING = GPIO.FALLING if _rpiLoaded else 'FALLING'
     RISING = GPIO.RISING if _rpiLoaded else 'RISING'
+    BOTH = GPIO.BOTH if _rpiLoaded else 'BOTH'
 
-    PUD_UP = GPIO.PUD_IP if _rpiLoaded else 'PUD_UP'
+    PUD_UP = GPIO.PUD_UP if _rpiLoaded else 'PUD_UP'
     PUD_DOWN = GPIO.PUD_DOWN if _rpiLoaded else 'PUD_DOWN'
 
     def setmode(*args, **kwargs):
         if _rpiLoaded:
-            GPIO.setmode(args, kwargs)
+            GPIO.setmode(*args, **kwargs)
         else:
             pass
 
     def setwarnings(*args, **kwargs):
         if _rpiLoaded:
-            GPIO.setwarnings(args, kwargs)
+            GPIO.setwarnings(*args, **kwargs)
         else:
             pass
 
     def setup(*args, **kwargs):
         if _rpiLoaded:
-            GPIO.setup(args, kwargs)
+            GPIO.setup(*args, **kwargs)
+        else:
+            pass
+
+    def input(*args, **kwargs):
+        if _rpiLoaded:
+            GPIO.input(*args, **kwargs)
         else:
             pass
 
     def output(*args, **kwargs):
         if _rpiLoaded:
-            GPIO.output(args, kwargs)
+            GPIO.output(*args, **kwargs)
         else:
             pass
 
     def add_event_detect(*args, **kwargs):
         if _rpiLoaded:
-            GPIO.add_event_detect(args, kwargs)
+            GPIO.add_event_detect(*args, **kwargs)
         else:
             pass

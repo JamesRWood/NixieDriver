@@ -6,11 +6,11 @@ from nixiedriver.config.config_manager import ConfigManager
 from nixiedriver.output.output_process import OutputProcess
 from nixiedriver.input.input_process import InputProcess
 from nixiedriver.clock.time_process import TimeProcess
-from nixiedriver.rpi.GPIO import GPIO
+from nixiedriver.rpi.gpio_proxy import GPIOProxy
 
 def main(argv):
-    GPIO.setmode(GPIO.BCM)
-    GPIO.setwarnings(False)
+    GPIOProxy.setmode(GPIOProxy.BCM)
+    GPIOProxy.setwarnings(False)
 
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument('--debug', action='store_true', help='run in debug mode')

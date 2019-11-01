@@ -1,25 +1,32 @@
+import time
+
 from typing import Type
 from multiprocessing import JoinableQueue
 
 from nixiedriver.output.output_mode import OutputMode
 from nixiedriver.config.config_manager import ConfigManager
-from nixiedriver.rpi.GPIO import GPIO
+from nixiedriver.rpi.gpio_proxy import GPIOProxy
 from nixiedriver.messages import OutputModeUpdatedMessage
 
 class InputDriver:
     def __init__(self, config: Type[ConfigManager], messageQueue: Type[JoinableQueue]):
         self._messageQueue = messageQueue
         self._outputMode = OutputMode.Military
+        self._showdate = False
 
         _outputModePin = config.getInt('input', 'output_mode_pin')
         _dateModePin = config.getInt('input', 'date_mode_pin')
 
-        GPIO.setup(_outputModePin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-        GPIO.add_event_detect(_outputModePin, GPIO.FALLING, callback=self._toggleOutputTimeMode, bouncetime=300)
-        GPIO.add_event_detect(_dateModePin, GPIO.FALLING, callback=self._showDate)
-        GPIO.add_event_detect(_dateModePin, GPIO.RISING, callback=self._showTime)
+        GPIOProxy.setup(_outputModePin, GPIOProxy.IN, GPIOProxy.PUD_DOWN)
+        GPIOProxy.setup(_dateModePin, GPIOProxy.IN, GPIOProxy.PUD_DOWN)
 
-    def _toggleOutputTimeMode(self):
+        GPIOProxy.add_event_detect(_outputModePin, GPIOProxy.FALLING, callback=self._toggleOutputTimeMode, bouncetime=500)
+        GPIOProxy.add_event_detect(_dateModePin, GPIOProxy.BOTH, callback=self._toggleDate, bouncetime=50)
+
+        while True:
+            time.sleep(1)
+
+    def _toggleOutputTimeMode(self, channel):
         if self._outputMode == OutputMode.Military:
             self._outputMode = OutputMode.Standard
         else:
@@ -27,8 +34,10 @@ class InputDriver:
 
         self._messageQueue.put(OutputModeUpdatedMessage(self._outputMode))
 
-    def _showDate(self):
-        self._messageQueue.put(OutputModeUpdatedMessage(OutputMode.Date))
-
-    def _showTime(self):
-        self._messageQueue.put(OutputModeUpdatedMessage(self._outputMode))
+    def _toggleDate(self, channel):
+        if self._showdate == False:
+            self._showdate = True
+            self._messageQueue.put(OutputModeUpdatedMessage(OutputMode.Date))
+        else:
+            self._showdate = False
+            self._messageQueue.put(OutputModeUpdatedMessage(self._outputMode))
