@@ -56,3 +56,9 @@ class GPIOProxy():
             GPIO.add_event_detect(*args, **kwargs)
         else:
             pass
+
+    def cleanup(*args, **kwargs):
+        if _rpiLoaded:
+            GPIO.cleanup(*args, **kwargs)
+        else:
+            pass
