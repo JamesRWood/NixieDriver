@@ -10,4 +10,4 @@ I've created an rpi.gpio module facade within this solution to enable developmen
 
 # Process
 
-![Process flow](/Nixie_driver-process_diagram.png)
+![Process flow](/Nixie_driver_process_diagram.png)
